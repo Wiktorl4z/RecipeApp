@@ -4,12 +4,14 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 import wiktorApp.domain.Recipe;
+import wiktorApp.domain.UnitOfMeasure;
 import wiktorApp.respositories.CategoryRepository;
 import wiktorApp.respositories.RecipeRepository;
 import wiktorApp.respositories.UnitOfMeasureRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEvent> {
@@ -33,6 +35,10 @@ public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEven
 
         List<Recipe> recipes = new ArrayList<>(2);
 
+        Optional<UnitOfMeasure> eachUomOptional = unitOfMeasureRepository.findByDescription("Each");
+        if (!eachUomOptional.isPresent()) {
+            throw new RuntimeException("Expected Unit Of Measure not Found");
+        }
 
 
         return null;
