@@ -1,33 +1,24 @@
 package wiktorApp.controllers;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import wiktorApp.domain.Category;
-import wiktorApp.domain.UnitOfMeasure;
-import wiktorApp.respositories.CategoryRepository;
-import wiktorApp.respositories.UnitOfMeasureRepository;
-
-import java.util.Optional;
+import wiktorApp.service.RecipeService;
 
 @Controller
 public class IndexController {
 
-    CategoryRepository categoryRepository;
-    UnitOfMeasureRepository unitOfMeasureRepository;
+    private final RecipeService recipeService;
 
-    public IndexController(CategoryRepository categoryRepository, UnitOfMeasureRepository unitOfMeasureRepository) {
-        this.categoryRepository = categoryRepository;
-        this.unitOfMeasureRepository = unitOfMeasureRepository;
+    public IndexController(RecipeService recipeService) {
+        this.recipeService = recipeService;
     }
 
     @RequestMapping({"", "/", "/index"})
-    public String getIndexPage() {
+    public String getIndexPage(Model model) {
 
-        Optional<Category> category = categoryRepository.findByDescription("American");
-        Optional<UnitOfMeasure> measure = unitOfMeasureRepository.findByDescription("Teaspoon");
+        model.addAttribute("recipes", recipeService.getRecipes());
 
-        System.out.println("Category: " + category.get().getId());
-        System.out.println("Measure: " + measure.get().getId());
         return "index";
     }
 }
