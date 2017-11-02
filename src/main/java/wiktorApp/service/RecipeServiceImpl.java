@@ -20,7 +20,6 @@ public class RecipeServiceImpl implements RecipeService{
     public Set<Recipe> getRecipes() {
         Set<Recipe> recipeSet = new HashSet<>();
         recipeRepository.findAll().iterator().forEachRemaining(recipeSet::add);
-
         return recipeSet;
     }
 }

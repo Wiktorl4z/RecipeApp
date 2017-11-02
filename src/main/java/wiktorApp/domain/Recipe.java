@@ -1,6 +1,7 @@
 package wiktorApp.domain;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -117,6 +118,7 @@ public class Recipe {
 
     public void setNotes(Notes notes) {
         this.notes = notes;
+        notes.setRecipe(this);
     }
 
     public Set<Ingredient> getIngredients() {
@@ -141,5 +143,16 @@ public class Recipe {
 
     public void setCategories(Set<Category> categories) {
         this.categories = categories;
+    }
+
+    public Recipe addIngredient(Ingredient ingredient){
+        ingredient.setRecipe(this);
+        this.ingredients.add(ingredient);
+        return this;
+    }
+    public Recipe addIngredient(String description, BigDecimal amount, UnitOfMeasure uom){
+        Ingredient ingredient = new Ingredient(description,amount,uom);
+        addIngredient(ingredient);
+        return this;
     }
 }
