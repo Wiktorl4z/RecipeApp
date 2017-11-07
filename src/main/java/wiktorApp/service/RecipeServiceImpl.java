@@ -1,6 +1,10 @@
 package wiktorApp.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import wiktorApp.commands.RecipeCommand;
+import wiktorApp.converters.RecipeCommandToRecipe;
+import wiktorApp.converters.RecipeToRecipeCommand;
 import wiktorApp.domain.Recipe;
 import wiktorApp.respositories.RecipeRepository;
 
@@ -12,9 +16,13 @@ import java.util.Set;
 public class RecipeServiceImpl implements RecipeService {
 
     RecipeRepository recipeRepository;
+    private final RecipeCommandToRecipe recipeCommandToRecipe;
+    private final RecipeToRecipeCommand recipeToRecipeCommand;
 
-    public RecipeServiceImpl(RecipeRepository recipeRepository) {
+    public RecipeServiceImpl(RecipeRepository recipeRepository, RecipeCommandToRecipe recipeCommandToRecipe, RecipeToRecipeCommand recipeToRecipeCommand) {
         this.recipeRepository = recipeRepository;
+        this.recipeCommandToRecipe = recipeCommandToRecipe;
+        this.recipeToRecipeCommand = recipeToRecipeCommand;
     }
 
     @Override
@@ -33,5 +41,13 @@ public class RecipeServiceImpl implements RecipeService {
             throw new RuntimeException("Recipe Not Found");
         }
         return recipe.get();
+    }
+
+    @Override
+    @Transactional
+    public RecipeCommand saveRecipeCommand(RecipeCommand command) {
+        Recipe detachedRecipe = recipeCommandToRecipe.convert(command);
+        Recipe savedRecipe = recipeRepository.save(detachedRecipe);
+        return recipeToRecipeCommand.convert(savedRecipe);
     }
 }
