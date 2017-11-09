@@ -6,7 +6,8 @@ import javax.persistence.*;
 import java.util.Set;
 
 @Entity
-@Data
+@Getter
+@Setter
 @EqualsAndHashCode(exclude = {"recipes"})
 public class Category {
 
